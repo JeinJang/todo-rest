@@ -1,4 +1,5 @@
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager
+from django.core.validators import RegexValidator
 from django.db import models
 
 class UserManager(BaseUserManager):
@@ -21,3 +22,22 @@ class User(AbstractBaseUser):
 
   def __str__(self):
     return self.nickname
+
+class Tag(models.Model):
+  name = models.CharField(max_length=50)
+  text_color = models.CharField(
+    max_length=7,
+    validators=[
+      RegexValidator('^#[A-Fa-f0-9]{6}$', message="Text color must be hex code.")
+    ]
+  )
+  background_color = models.CharField(
+    max_length=7,
+    validators=[
+      RegexValidator('^#[A-Fa-f0-9]{6}$', message="Background color must be hex code.")
+    ]
+  )
+  created_at = models.DateTimeField(auto_now_add=True)
+
+  def __str__(self):
+    return self.name
