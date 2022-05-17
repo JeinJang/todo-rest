@@ -25,6 +25,7 @@ class User(AbstractBaseUser):
 
 class Tag(models.Model):
   name = models.CharField(max_length=50)
+
   text_color = models.CharField(
     max_length=7,
     validators=[
@@ -41,3 +42,18 @@ class Tag(models.Model):
 
   def __str__(self):
     return self.name
+
+class Todo(models.Model):
+  title = models.CharField(max_length=50)
+  description = models.CharField(max_length=500)
+  creator = models.ForeignKey(User, on_delete=models.CASCADE, related_name='creator')
+  tag = models.ForeignKey(Tag, on_delete=models.PROTECT, related_name='tags')
+  created_at = models.DateTimeField(auto_now_add=True)
+  updated_at = models.DateTimeField(auto_now=True)
+  due_date = models.DateTimeField()
+  closed_at = models.DateTimeField(blank=True, null=True)
+  is_closed = models.BooleanField(default=False)
+  deleted_at = models.DateTimeField(blank=True, null=True)
+
+  def __str__(self):
+    return self.title
